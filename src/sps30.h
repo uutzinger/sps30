@@ -335,13 +335,13 @@ struct sps_values {
 
 /* needed for conversion float IEE754 */
 typedef union {
-    byte array[4];
+    uint8_t array[4];
     float value;
 } ByteToFloat;
 
 /* needed for auto interval timing */
 typedef union {
-    byte array[4];
+    uint8_t array[4];
     uint32_t value;
 } ByteToU32;
 

@@ -1003,7 +1003,7 @@ float SPS30::byte_to_float(int x)
 {
     ByteToFloat conv;
 
-    for (byte i = 0; i < 4; i++){
+    for (uint8_t i = 0; i < 4; i++){
        conv.array[3-i] = _Receive_BUF[x+i]; //or conv.array[i] = _Receive_BUF[x+i]; depending on endianness
     }
 
@@ -1021,7 +1021,7 @@ uint32_t SPS30::byte_to_U32(int x)
 {
     ByteToU32 conv;
 
-    for (byte i = 0; i < 4; i++){
+    for (uint8_t i = 0; i < 4; i++){
         conv.array[3-i] = _Receive_BUF[x+i]; //or conv.array[i] = _Receive_BUF[x+i]; depending on endianness
     }
 
@@ -1529,7 +1529,7 @@ uint8_t SPS30::I2C_SetPointer()
 
     if (_SPS30_Debug){
         DebugPrintf("I2C Sending: ");
-        for(byte i = 0; i < _Send_BUF_Length; i++)
+        for(uint8_t i = 0; i < _Send_BUF_Length; i++)
             DebugPrintf(" 0x%02X", _Send_BUF[i]);
         DebugPrintf("\n");
     }
@@ -1565,7 +1565,7 @@ uint8_t SPS30::I2C_SetPointer_Read(uint8_t cnt, bool chk_zero)
 
     if (_SPS30_Debug){
        DebugPrintf("I2C Received: ");
-       for(byte i = 0; i < _Receive_BUF_Length; i++)
+       for(uint8_t i = 0; i < _Receive_BUF_Length; i++)
                     DebugPrintf("0x%02X ",_Receive_BUF[i]);
        DebugPrintf("length: %d\n\n",_Receive_BUF_Length);
     }
@@ -1604,13 +1604,13 @@ uint8_t SPS30::I2C_ReadToBuffer(uint8_t count, bool chk_zero)
         // 2 bytes RH, 1 CRC
         if( i == 3) {
 
+            _Receive_BUF[_Receive_BUF_Length++] = data[0];
+            _Receive_BUF[_Receive_BUF_Length++] = data[1];
+            
             if (data[2] != I2C_calc_CRC(&data[0])){
                 DebugPrintf("I2C CRC error: Expected 0x%02X, calculated 0x%02X\n",data[2] & 0xff,I2C_calc_CRC(&data[0]) & 0xff);
                 return(SPS30_ERR_PROTOCOL);
             }
-
-            _Receive_BUF[_Receive_BUF_Length++] = data[0];
-            _Receive_BUF[_Receive_BUF_Length++] = data[1];
 
             i = 0;
 
